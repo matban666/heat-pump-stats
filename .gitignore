@@ -1,0 +1,12 @@
+.env
+.env.windows_python
+.vscode/settings.json
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pyzw
+heat_pump_data.pickle
