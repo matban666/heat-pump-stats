@@ -8,7 +8,7 @@ Utility to load ESPAltherma heat pump metrics from Home Assistant Influx and sum
 # Quick Start
 
 ## Python
-Create a venv (optional method)
+Create a venv with dependencies in requirements.txt (optional method)
 1. Install a fairly new python - tested with 3.12
 2. Add the path to .env file - e.g. PYTHON_BIN=/usr/local/bin/python3.12
 3. Run source create_venv.sh
