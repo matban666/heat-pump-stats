@@ -206,17 +206,17 @@ class Duration():
               
         result = \
             '-' * 20 + \
-            f'{self.get_title()}, Start: {self.get_first_time().astimezone().strftime('%Y:%m:%d %H:%M:%S')}, End: {self.get_last_time().astimezone().strftime('%Y:%m:%d %H:%M:%S')}, duration: {self.get_duration()}' + \
+            f'{self.get_title()}, Start: {self.get_first_time().astimezone().strftime('%Y:%m:%d %H:%M:%S')}, End: {self.get_last_time().astimezone().strftime('%Y:%m:%d %H:%M:%S')}, Duration: {self.get_duration()}' + \
             '-' * 20 + '\n' + \
             f"Defrosts: {self._defrost_counter.get_count()}, " + \
             f"BUH1: {self._bh1_counter.get_count()}, " + \
             f"BUH2: {self._bh2_counter.get_count()}, " + \
-            f"Freeze prot: {self._freeze_protection_counter.get_count()}, " + \
-            f"Freeze prot(pipes): {self._freeze_protection_water_piping_counter.get_count()}, " + \
+            f"Freeze Protection: {self._freeze_protection_counter.get_count()}, " + \
+            f"Freeze Protection(Pipes): {self._freeze_protection_water_piping_counter.get_count()}, " + \
             f"Low Noise: {self._low_noise_control_counter.get_count()}, " + \
             f"Silent Mode: {self._silent_mode_counter.get_count()}\n" + \
             f"Outside Temp: {str(self._outside_temp)}\n" + \
-            f"Heating Energy Out: {self._energy_out}, Energy in: {self._energy_in}, Standby energy: {self._energy_standby}, Immersion energy: {self._energy_immersion}, BUH Energy: {self._energy_buh}\n" 
+            f"Heating Energy Out: {self._energy_out}, Energy In: {self._energy_in}, Standby Energy: {self._energy_standby}, Immersion Energy: {self._energy_immersion}, BUH Energy: {self._energy_buh}\n" 
 
         result += self._on_to_str()
 

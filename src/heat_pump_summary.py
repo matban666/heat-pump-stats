@@ -6,6 +6,7 @@ from durations_manager import DurationsManager
 from datasource.data_types import DataTypes
 from argparse import ArgumentParser
 from dotenv import load_dotenv
+from duration_factory import DurationFactory
 
 
 def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     parser.add_argument("--duration_types", 
                         help="Duration types that you want to display.", 
                         nargs='+', 
-                        choices=["session", "day", "week", "month", "all_time"],
+                        choices=DurationFactory.get_top_level_duration_names(),
                         default=["session", "all_time"])
 
     args = parser.parse_args()

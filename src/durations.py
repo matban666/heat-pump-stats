@@ -40,6 +40,9 @@ class Durations(NewSessionSubscriber):
 
         return current_durtation.get_duration_type().value
     
+    def get_current_duration_type_snake(self):
+        return self.get_current_duration_type().lower().replace(' ', '_')
+    
     def _update_duration(self, data_frame):
         if len(self._durations) == 0:
             raise Exception('No duration to update')

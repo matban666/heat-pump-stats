@@ -41,6 +41,13 @@ class DurationFactory():
     @property
     def duration_type(self):
         return self._duration_type
+    
+    @staticmethod
+    def get_top_level_duration_names():
+        snake = lambda x: x.lower().replace(' ', '_')
+
+        return [snake(duration_type.value) for duration_type in DurationTypes if duration_type not in [DurationTypes.CYCLE]]
+
 
     @staticmethod
     def session_factory(data_frame, current_duration):
