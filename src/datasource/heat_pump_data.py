@@ -5,6 +5,7 @@ from collections import OrderedDict
 from datasource.data_types import DataTypes, DataTypeFloat, DataTypeString
 from datasource.influx.influx_queries import StringQuery, ValueQuery
 from utils.time import ceil_dt
+from tzlocal import get_localzone
 
 class HeatPumpData:
     """
@@ -28,6 +29,8 @@ class HeatPumpData:
         - the_last_date (datetime): The end date for querying data.
         - from_pickle (str): The name of the pickle file to load data from or None to load from influx.
         """        
+
+        self.local_timezone = get_localzone()
 
         if from_pickle is not None:
             print("Loading from last pickle...")
@@ -62,11 +65,13 @@ class HeatPumpData:
         None
         """
         time_rounded = ceil_dt(time)
+   
+        local_time = time_rounded.astimezone(self.local_timezone)
 
-        if time_rounded in self._data:
-            self._data[time_rounded][name] = value
+        if local_time in self._data:
+            self._data[local_time][name] = value
         else:
-            self._data[time_rounded] = {name: value}
+            self._data[local_time] = {name: value}
 
     def pickle_data(self, filename='heat_pump_data.pickle'):
         """

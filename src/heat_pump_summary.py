@@ -1,5 +1,4 @@
-import pytz
-from datetime import datetime, timedelta
+from datetime import datetime
 from pprint import pprint
 from datasource.heat_pump_data import HeatPumpData
 from durations_manager import DurationsManager
@@ -7,6 +6,8 @@ from datasource.data_types import DataTypes
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 from duration_factory import DurationFactory
+from os import environ
+from tzlocal import get_localzone
 
 
 def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     load_dotenv()
     load_dotenv(dotenv_path='.env.testing')
 
-    local_timezone = pytz.timezone('Europe/London')
+    local_timezone = get_localzone()
 
     # Parse the command line arguments
     parser = ArgumentParser(description="Re-run the data analysis.")

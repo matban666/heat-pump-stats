@@ -2,3 +2,4 @@ influxdb-client
 python-dotenv
 pytz
 pytest
+tzlocal
