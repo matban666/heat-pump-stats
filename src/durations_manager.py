@@ -7,21 +7,33 @@ class DurationsManager():
     Owns all the different types of durations and passes each data frame to them
     """
 
-    def __init__(self):
-        all_time = Durations(DurationFactory(DurationTypes.ALL_TIME))
-        # week = Durations(DurationFactory(DurationTypes.WEEK))
-        # day = Durations(DurationFactory(DurationTypes.DAY))
-        month = Durations(DurationFactory(DurationTypes.MONTH))
-        sessions = Durations(DurationFactory(DurationTypes.SESSION), subscribers=[all_time, month])
+    def __init__(self, duration_types):
+        subscribers = []
+        self._durations = []
 
-        # only one of each type of duration
-        self._durations = [
-            all_time,
-            # month,
-            # week,
-            # days,
-            sessions
-        ]
+        if 'all_time' in duration_types:
+            all_time = Durations(DurationFactory(DurationTypes.ALL_TIME))   
+            subscribers.append(all_time)
+            self._durations.append(all_time)
+
+        if 'week' in duration_types:
+            week = Durations(DurationFactory(DurationTypes.WEEK))
+            subscribers.append(week)
+            self._durations.append(week)
+
+        if 'day' in duration_types:
+            day = Durations(DurationFactory(DurationTypes.DAY))
+            subscribers.append(day)
+            self._durations.append(day)
+
+        if 'month' in duration_types:
+            month = Durations(DurationFactory(DurationTypes.MONTH))
+            subscribers.append(month)
+            self._durations.append(month)
+
+        if 'session' in duration_types:
+            sessions = Durations(DurationFactory(DurationTypes.SESSION), subscribers=subscribers)
+            self._durations.append(sessions)
 
     def __str__(self):
         result = f''

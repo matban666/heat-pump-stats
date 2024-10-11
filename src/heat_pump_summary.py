@@ -8,12 +8,12 @@ from argparse import ArgumentParser
 from dotenv import load_dotenv
 
 
-def analyse_data(heat_pump_data, the_first_date, the_last_date):
+def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
     # Create the period manager, this processes the data into time periods.
     # Time periods can be sessions or calendar durations.
     # A session is a period of time where the heat pump was was idle or being asked to heat for
     # either DHW or CH
-    periods = DurationsManager()
+    periods = DurationsManager(duration_types)
 
     # current_data has all the data types as keys and their default values as values
     current_data = {data_type.get_name(): data_type.get_default_value() for data_type in DataTypes()._data_types}
@@ -64,6 +64,12 @@ if __name__ == "__main__":
                         help="The output format for the data analysis.", 
                         default="text", 
                         choices=["text", "json"])
+    parser.add_argument("--duration_types", 
+                        help="Duration types that you want to display.", 
+                        nargs='+', 
+                        choices=["session", "day", "week", "month", "all_time"],
+                        default=["session", "all_time"])
+
     args = parser.parse_args()
 
     # What period of data do we want to analyze?
@@ -74,7 +80,7 @@ if __name__ == "__main__":
     # make sure the dates specified align with the data in the pickle file
     heat_pump_data = HeatPumpData(the_first_date, the_last_date, from_pickle='heat_pump_data.pickle' if args.from_pickle else None)
 
-    durations = analyse_data(heat_pump_data, the_first_date, the_last_date)
+    durations = analyse_data(heat_pump_data, the_first_date, the_last_date, args.duration_types)
 
     if args.output_format == "json":
         pprint(durations.to_json())
