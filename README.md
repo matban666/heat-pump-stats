@@ -2,8 +2,8 @@
 Utility to load ESPAltherma heat pump metrics from Home Assistant Influx and summarise
 
 # Pre Requisites
-- ESP Altherma 
-- Home Assistant with Influxdb
+- ESP Altherma https://raomin.github.io/ESPAltherma/
+- Home Assistant with Influxdb https://www.home-assistant.io/integrations/influxdb/
 
 # Quick Start
 
