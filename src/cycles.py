@@ -27,12 +27,9 @@ class Cycles:
         return [cycle.to_json() for cycle in self._cycles]
 
     def __str__(self):
-        result = f'Cycles {self.on_cycle_count()}\n'
+        result = f'ON Cycles: {self.on_cycle_count()}\n'
+        result += f'All Cycles:\n'
         for i, cycle in enumerate(self._cycles):
-            result += f'Cycle {int((i/2)+1)}:'
-                
-            result += str(cycle)
-
-            result += '\n'
+            result += str(cycle) + '\n'
         return result
     
