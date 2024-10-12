@@ -29,3 +29,11 @@ You may also have to edit the flux queries in src/datasource/influx/influx_queri
 
 ## Help
 (venv) $ src/heatpump_summary.py --help
+
+## ToDo
+
+- Compressor starts count, use secondary inverter current
+- HeatPumpState class to take complxity out of Duration
+- HeatPumpLogic class to collect the state change logic from the DurationFactory
+- Influx queries can probably be done as two queries, one for string and one for value instead of a seperate query for every metric
+- Adapt for continual streaming from influx and streaming out to somewhere else so that a web app can consume the stats

@@ -3,17 +3,15 @@ class RollingEnergy():
         self._start_time = start_time
         self._last_time = start_time
         self._power_sum = 0
-        self._frame_count = 0
         self._energy = 0
         self._frames_per_hour = 60 * (60 / granularity) 
 
     def update(self, current_time, new_power_value):
-        self._power_sum += new_power_value
-        self._last_time = current_time
-        self._frame_count += 1
-
         # Calculate on the way in so that it can be read out at any time and frequency
-        self._energy = self._power_sum / self._frames_per_hour if self._frames_per_hour > 0 else 0
+        self._power_sum += new_power_value / self._frames_per_hour if self._frames_per_hour > 0 else 0
+        self._last_time = current_time
+
+        self._energy = self._power_sum 
 
     def get_energy(self):
         return float(self._energy)

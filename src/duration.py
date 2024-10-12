@@ -1,6 +1,6 @@
 from utils.calculations import power_from_flow, cop
 from datetime import timedelta
-from utils.state_counter import StateCounter
+from utils.state_counter import StateCounter, AboveZeroStateCounter
 from utils.rolling_min_max_mean import RollingMinMaxMean
 from utils.rolling_energy import RollingEnergy
 from os import environ
@@ -49,9 +49,9 @@ class Duration():
         if self._first_frame is None:
             self._first_frame = data_frame.copy()
 
-        self.update_current_frame()
+        self.update_current_state_from_frame()
 
-    def update_current_frame(self):
+    def update_current_state_from_frame(self):
         self._current_operation_mode = self._current_frame['Operation Mode']
         self._current_three_way_valve = self._current_frame ['Three Way Valve']
 
@@ -80,33 +80,18 @@ class Duration():
         self._energy_out.update(self._current_frame['DateTime'], power_out)
         self._energy_immersion.update(self._current_frame['DateTime'], self._current_frame['Immersion Power'] / 1000.0)
         
-        power_in_buh = 0.0
         if self._bh1_counter.state == 'ON' or self._bh2_counter.state == 'ON':
-            power_in_buh = power_in
+            self._energy_buh.update(self._current_frame['DateTime'], power_in)
         
-        self._energy_buh.update(self._current_frame['DateTime'], power_in_buh)
-
         # Why is this here? It should be in the session duration, no?
-        power_in_ch = 0.0
-        power_in_dhw = 0.0
-        power_in_standby = 0.0
-        power_out_ch = 0.0
-        power_out_dhw = 0.0
-
         if friendly_operation_mode == 'CH':
-            power_in_ch = power_in
-            power_out_ch = power_out
+            self._energy_ch_in.update(self._current_frame['DateTime'], power_in)
+            self._energy_ch_out.update(self._current_frame['DateTime'], power_out)
         elif friendly_operation_mode == 'DHW':
-            power_in_dhw = power_in
-            power_out_dhw = power_out
+            self._energy_dhw_in.update(self._current_frame['DateTime'], power_in)
+            self._energy_dhw_out.update(self._current_frame['DateTime'], power_out)
         else:
-            power_in_standby = power_in
-
-        self._energy_ch_in.update(self._current_frame['DateTime'], power_in_ch)
-        self._energy_ch_out.update(self._current_frame['DateTime'], power_out_ch)
-        self._energy_dhw_in.update(self._current_frame['DateTime'], power_in_dhw)
-        self._energy_dhw_out.update(self._current_frame['DateTime'], power_out_dhw)
-        self._energy_standby.update(self._current_frame['DateTime'], power_in_standby)
+            self._energy_standby.update(self._current_frame['DateTime'], power_in)
 
         # Calculate the cops
         self._cop_average = cop(self._energy_in, self._energy_out) 
