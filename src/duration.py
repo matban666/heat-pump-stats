@@ -26,15 +26,15 @@ class Duration():
         self._wc_offset = RollingMinMaxMean()
 
         granularity = int(environ.get('GRANULARITY', 30))
-        self._energy_in = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_out = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_ch_in = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_ch_out = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_dhw_in = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_dhw_out = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_standby = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_immersion = RollingEnergy(granularity, data_frame['DateTime'])
-        self._energy_buh = RollingEnergy(granularity, data_frame['DateTime'])
+        self._energy_in = RollingEnergy(granularity)
+        self._energy_out = RollingEnergy(granularity)
+        self._energy_ch_in = RollingEnergy(granularity)
+        self._energy_ch_out = RollingEnergy(granularity)
+        self._energy_dhw_in = RollingEnergy(granularity)
+        self._energy_dhw_out = RollingEnergy(granularity)
+        self._energy_standby = RollingEnergy(granularity)
+        self._energy_immersion = RollingEnergy(granularity)
+        self._energy_buh = RollingEnergy(granularity)
 
         self._cop_average = 0
         self._cop_ch = 0
@@ -76,22 +76,22 @@ class Duration():
         self._silent_mode_counter.update(self._current_frame['Silent Mode'])
 
         # Update the energy rolling aggregates
-        self._energy_in.update(self._current_frame['DateTime'], power_in)
-        self._energy_out.update(self._current_frame['DateTime'], power_out)
-        self._energy_immersion.update(self._current_frame['DateTime'], self._current_frame['Immersion Power'] / 1000.0)
+        self._energy_in.update(power_in)
+        self._energy_out.update(power_out)
+        self._energy_immersion.update(self._current_frame['Immersion Power'] / 1000.0)
         
         if self._bh1_counter.state == 'ON' or self._bh2_counter.state == 'ON':
-            self._energy_buh.update(self._current_frame['DateTime'], power_in)
+            self._energy_buh.update(power_in)
         
         # Why is this here? It should be in the session duration, no?
         if friendly_operation_mode == 'CH':
-            self._energy_ch_in.update(self._current_frame['DateTime'], power_in)
-            self._energy_ch_out.update(self._current_frame['DateTime'], power_out)
+            self._energy_ch_in.update(power_in)
+            self._energy_ch_out.update(power_out)
         elif friendly_operation_mode == 'DHW':
-            self._energy_dhw_in.update(self._current_frame['DateTime'], power_in)
-            self._energy_dhw_out.update(self._current_frame['DateTime'], power_out)
+            self._energy_dhw_in.update(power_in)
+            self._energy_dhw_out.update(power_out)
         else:
-            self._energy_standby.update(self._current_frame['DateTime'], power_in)
+            self._energy_standby.update(power_in)
 
         # Calculate the cops
         self._cop_average = cop(self._energy_in, self._energy_out) 

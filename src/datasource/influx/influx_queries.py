@@ -4,7 +4,21 @@ from datasource.influx.influx_client import InfluxClient
 from os import environ
 
 class HeatpumpQuery(InfluxClient):
+    """
+    This class has query methods to get heatpump data from influxdb
+    """
+
     def __init__(self, first_date, last_date, name):
+        """
+        Initialize the HeatpumpQuery object.
+
+        Parameters:
+        - first_date (datetime): The start date for querying data.
+        - last_date (datetime): The end date for querying data.
+
+        
+        """
+
         super().__init__()
         
         self.name = name
@@ -26,6 +40,16 @@ class HeatpumpQuery(InfluxClient):
 
 class StringQuery(HeatpumpQuery):
     def __init__(self, first_date, last_date, heatpump_data, field, name):   
+        """
+        This class has a query to get numeric data from influxdb
+
+        Parameters:
+        - first_date (datetime): The start date for querying data.
+        - last_date (datetime): The end date for querying data.
+        - heatpump_data (HeatPumpData): The heatpump data object to store the data.
+        - field (str): The field to query from influxdb.
+        - name (str): Our name for the field in the loaded data.
+        """
         super().__init__(first_date, last_date, name)
 
         query = f'from(bucket: "homeassistant")\
@@ -37,6 +61,19 @@ class StringQuery(HeatpumpQuery):
 
 
 class ValueQuery(HeatpumpQuery):
+    """
+    This class has a query to get numeric data from influxdb
+
+    Parameters:
+    - first_date (datetime): The start date for querying data.
+    - last_date (datetime): The end date for querying data.
+    - heatpump_data (HeatPumpData): The heatpump data object to store the data.
+    - measurement (str): The measurement to query from influxdb.
+    - friendly_name (str): Friendly Name of the measurement to query from influxdb.
+    - name (str): Our name for the field in the loaded data.
+    
+    """
+
     def __init__(self, first_date, last_date, heatpump_data, measurement, friendly_name, name):   
         super().__init__(first_date, last_date, name)
 

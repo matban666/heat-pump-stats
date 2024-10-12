@@ -73,22 +73,28 @@ class HeatPumpData:
         else:
             self._data[local_time] = {name: value}
 
-    def pickle_data(self, filename='heat_pump_data.pickle'):
+    def pickle_data(self, filename: str='heat_pump_data.pickle'):
         """
         It's Pickling Time with pickling Jeff and Joby's here as well.
         Pickle the data from inlfux so that it can be re-run for testing
+
+        Parameters:
+        - filename (str): The name of the pickle file to save the data to.
         """
         with open(filename, 'wb') as f:
             pickle.dump(self._data, f)
 
-    def unpickle_data(self, filename='heat_pump_data.pickle'):
+    def unpickle_data(self, filename: str='heat_pump_data.pickle') -> dict:
         """
         Load the data from the pickle file.
+
+        Parameters:
+        - filename (str): The name of the pickle file to load the data from.
         """
         with open (filename, 'rb') as f:
             return pickle.load(f)
 
-    def get_sorted_data(self):
+    def get_sorted_data(self) -> OrderedDict:
         """
         Returns the heat pump data dictionary sorted by time. So that it can be processed in order.
         """
@@ -99,6 +105,10 @@ class HeatPumpData:
         Generator to iterate through the sorted heat pump data.
         Yields:
         Tuple of (time, data) sorted by time.
+
+        Parameters:
+        - the_first_date (datetime): The first date to start iterating from.
+        - the_last_date (datetime): The last date to iterate to.
         """
         for time, data in self.get_sorted_data().items():
             if the_first_date is not None and time < the_first_date:
@@ -108,17 +118,4 @@ class HeatPumpData:
                 break
 
             yield time, data
-    
-
-if __name__ == "__main__":
-    """
-    Main function just to test the HeatPumpData class.
-    """
-    the_first_date = datetime(year=2024, month=10, day=1)
-    the_last_date = datetime.now() + timedelta(days=1)
-
-    heatpump_data = HeatPumpData(the_first_date, the_last_date)
-
-    for k,v in heatpump_data.get_sorted_data().items():
-        print(k,v)
 

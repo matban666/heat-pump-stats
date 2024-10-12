@@ -30,6 +30,9 @@ class DataType(ABC):
         return self._unit
 
 class DataTypeString(DataType):
+    """
+    Class for string data types
+    """
     def __init__(self, name, data_source_name, unit=None):
         super().__init__(name=name, data_source_name=data_source_name, unit=unit)
     
@@ -37,6 +40,9 @@ class DataTypeString(DataType):
         return ""
 
 class DataTypeFloat(DataType):
+    """
+    Class for float data types
+    """
     def __init__(self, name, data_source_name, unit=None):
         super().__init__(name=name, data_source_name=data_source_name, unit=unit)
 
@@ -45,6 +51,12 @@ class DataTypeFloat(DataType):
 
 
 class DataTypes():
+    """
+    Class to store the data types with enough information to query from influx.
+
+    Probably make this class re-usable by adding methods to create the data types externally
+    """
+
     def __init__(self):
         self._data_types = [
             DataTypeString(name='Operation Mode', data_source_name='Operation Mode_str'),

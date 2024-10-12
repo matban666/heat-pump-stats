@@ -2,7 +2,7 @@
 Some calculations that are used for heat pump data analysis
 """
 
-def power_from_flow(flow, temperature_difference):
+def power_from_flow(flow: float, temperature_difference: float):
     """
     Calculate the power from a given flow rate and temperature difference
     
@@ -11,7 +11,7 @@ def power_from_flow(flow, temperature_difference):
     """
     return (flow / 60.0) * temperature_difference * 4.1868
 
-def cop(power_in, power_out):
+def cop(power_in: float, power_out: float):
     """
     Calculate the Coefficient of Performance
 
