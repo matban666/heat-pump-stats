@@ -6,8 +6,9 @@ from datasource.data_ingestor import DataByTime
 
 class DataLoader:
     """
-    A class representing heat pump data.  Can load data from influx or from a pickle file. SOLID would require these
-    two responsibilities to be separated a bit better I think.
+    A class representing heat pump data.  Can load data from influx or from a pickle file. 
+    Currently tied to influx but could be extended to other data sources.
+
     Attributes:
         data (dict): A dictionary to store the heat pump data.
     Methods:
