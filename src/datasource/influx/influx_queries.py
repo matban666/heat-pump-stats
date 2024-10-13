@@ -46,7 +46,7 @@ class StringQuery(InfluxQuery):
         Parameters:
         - first_date (datetime): The start date for querying data.
         - last_date (datetime): The end date for querying data.
-        - data_ingestor (DataIngestor): The heatpump data object to store the data.
+        - data_ingestor (DataIngestor): The data object to store the data.
         - field (str): The field to query from influxdb.
         - name (str): Our name for the field in the loaded data.
         """
@@ -67,7 +67,7 @@ class ValueQuery(InfluxQuery):
     Parameters:
     - first_date (datetime): The start date for querying data.
     - last_date (datetime): The end date for querying data.
-    - data_ingestor (DataIngestor): The heatpump data object to store the data.
+    - data_ingestor (DataIngestor): The data object to store the data.
     - measurement (str): The measurement to query from influxdb.
     - friendly_name (str): Friendly Name of the measurement to query from influxdb.
     - name (str): Our name for the field in the loaded data.

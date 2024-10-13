@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     # Load the data (if from file then it will be whatever dates were used last time with influx)
     # make sure the dates specified align with or are within the data in the pickle file
-    heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='heat_pump_data.pickle' if args.from_pickle else None)
+    heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='data.pickle' if args.from_pickle else None)
 
     durations = analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date, args.duration_types)
 

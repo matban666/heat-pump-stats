@@ -11,7 +11,7 @@ class DataLoader:
     Attributes:
         data (dict): A dictionary to store the heat pump data.
     Methods:
-        __init__(the_first_date, the_last_date): Initializes the HeatPumpData object with the given first and last dates.
+        __init__(the_first_date, the_last_date): Initializes the DataLoader object with the given first and last dates.
         add_data(time, name, value): Adds data to the heat pump data dictionary.
         get_sorted_data(): Returns the heat pump data dictionary sorted by time.
         pickle_data(filename='heat_pump_data.pickle'): Pickles the heat pump data to a file.
@@ -20,7 +20,7 @@ class DataLoader:
     
     def __init__(self, the_first_date, the_last_date, data_types, from_pickle=None):
         """
-        Initialize the HeatPumpData object.
+        Initialize the DataLoader object.
         Parameters:
         - the_first_date (datetime): The start date for querying data.
         - the_last_date (datetime): The end date for querying data.
@@ -45,7 +45,7 @@ class DataLoader:
             # Pickle the data so that we can re-run the script without querying influx
             self.pickle_data() 
 
-    def pickle_data(self, filename: str='heat_pump_data.pickle'):
+    def pickle_data(self, filename: str='data.pickle'):
         """
         It's Pickling Time with pickling Jeff and Joby's here as well.
         Pickle the data from inlfux so that it can be re-run for testing
@@ -56,7 +56,7 @@ class DataLoader:
         with open(filename, 'wb') as f:
             pickle.dump(self._data, f)
 
-    def unpickle_data(self, filename: str='heat_pump_data.pickle') -> dict:
+    def unpickle_data(self, filename: str='data.pickle') -> dict:
         """
         Load the data from the pickle file.
 
