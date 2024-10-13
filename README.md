@@ -32,7 +32,8 @@ You may also have to edit the flux queries in src/datasource/influx/influx_queri
 
 ## ToDo
 
-- Compressor starts count, use secondary inverter current
+- Possible Bug: energy for defrosts in CH where DHW is used are counted against DHW, is that correct
+- If a defrost in CH requires DHW, this can happen before the defrost state is entered and the CH sesssion is split - see comments in integration tests
 - HeatPumpState class to take complxity out of Duration
 - HeatPumpLogic class to collect the state change logic from the DurationFactory
 - Influx queries can probably be done as two queries, one for string and one for value instead of a seperate query for every metric

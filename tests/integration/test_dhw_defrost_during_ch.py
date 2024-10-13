@@ -48,3 +48,5 @@ def test_dhw_defrost_during_ch():
 # This is a case where the DHW is called for before the defrost in a CH session
 # It results in the CH session being splut into two parts
 # It would be nicer to show this as a single CH session but not sure now to do that without making the code more complex
+# the_first_date = datetime(year=2024, month=10, day=13, hour=5, tzinfo=pytz.timezone('Europe/London'))
+# the_last_date = datetime(year=2024, month=10, day=13, hour=10, tzinfo=pytz.timezone('Europe/London'))
