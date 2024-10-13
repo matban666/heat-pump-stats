@@ -1,7 +1,8 @@
 import pytz
 from datetime import datetime
 from heat_pump_summary import analyse_data
-from datasource.heat_pump_data import HeatPumpData
+from datasource.data_loader import DataLoader
+from heat_pump_data_types import HeatPumpDataTypes
 from pprint import pprint
 
 
@@ -9,10 +10,11 @@ def test_defrost_during_ch():
     the_first_date = datetime(year=2024, month=10, day=11, hour=4, tzinfo=pytz.timezone('Europe/London'))
     the_last_date = datetime(year=2024, month=10, day=11, hour=9, tzinfo=pytz.timezone('Europe/London'))
 
+    heat_pump_data_types = HeatPumpDataTypes()
     #Load the data (if from file then it will be whatever dates were used last time with influx)
-    heat_pump_data = HeatPumpData(the_first_date, the_last_date, from_pickle='tests/integration/heat_pump_data_defrost_during_ch.pickle')
+    heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='tests/integration/heat_pump_data_defrost_during_ch.pickle')
 
-    periods = analyse_data(heat_pump_data, the_first_date, the_last_date)
+    periods = analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date)
 
     json = periods.to_json()
 
@@ -28,10 +30,12 @@ def test_dhw_defrost_during_ch():
     the_first_date = datetime(year=2024, month=10, day=10, hour=4, tzinfo=pytz.timezone('Europe/London'))
     the_last_date = datetime(year=2024, month=10, day=10, hour=9, tzinfo=pytz.timezone('Europe/London'))
 
-    #Load the data (if from file then it will be whatever dates were used last time with influx)
-    heat_pump_data = HeatPumpData(the_first_date, the_last_date, from_pickle='tests/integration/heat_pump_data_dhw_defrost_during_ch.pickle')
+    heat_pump_data_types = HeatPumpDataTypes()
 
-    periods = analyse_data(heat_pump_data, the_first_date, the_last_date)
+    #Load the data (if from file then it will be whatever dates were used last time with influx)
+    heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='tests/integration/heat_pump_data_dhw_defrost_during_ch.pickle')
+
+    periods = analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date)
 
     json = periods.to_json()
 

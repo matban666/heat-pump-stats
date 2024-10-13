@@ -1,6 +1,6 @@
 from datetime import datetime
 from pprint import pprint
-from datasource.heat_pump_data import HeatPumpData
+from datasource.data_loader import DataLoader
 from durations_manager import DurationsManager
 from datasource.data_types import DataTypes
 from argparse import ArgumentParser
@@ -8,17 +8,28 @@ from dotenv import load_dotenv
 from duration_factory import DurationFactory
 from os import environ
 from tzlocal import get_localzone
+from heat_pump_data_types import HeatPumpDataTypes
 
 
-def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
-    # Create the period manager, this processes the data into time periods.
-    # Time periods can be sessions or calendar durations.
-    # A session is a period of time where the heat pump was was idle or being asked to heat for
-    # either DHW or CH
+def analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date, duration_types=['session', 'all_time']):
+    """
+    Create the period manager, this processes the data into time periods.
+    Time periods can be sessions or calendar durations.
+    A session is a period of time where the heat pump was was idle or being asked to heat for
+    either DHW or CH
+
+    Parameters:
+    - heat_pump_data (DataLoader): The data to analyze.
+    - heat_pump_data_types (HeatPumpDataTypes): The data types to analyze.
+    - the_first_date (datetime): The start date for the data analysis.
+    - the_last_date (datetime): The end date for the data analysis.
+    - duration_types (list): The duration types to analyze.
+    """
+
     periods = DurationsManager(duration_types)
 
     # current_data has all the data types as keys and their default values as values
-    current_data = {data_type.get_name(): data_type.get_default_value() for data_type in heat_pump_data.get_data_types()}
+    current_data = {data_type.get_name(): data_type.get_default_value() for data_type in heat_pump_data_types.get_data_types()}
 
     for date_time, data_frame in heat_pump_data.data_by_time(the_first_date, the_last_date):
         # Each incomimg data frame will have one or more keys depending on the 
@@ -78,11 +89,14 @@ if __name__ == "__main__":
     the_first_date = args.start_time.replace(tzinfo=local_timezone)
     the_last_date = args.end_time.replace(tzinfo=local_timezone)
 
-    # Load the data (if from file then it will be whatever dates were used last time with influx)
-    # make sure the dates specified align with the data in the pickle file
-    heat_pump_data = HeatPumpData(the_first_date, the_last_date, from_pickle='heat_pump_data.pickle' if args.from_pickle else None)
+    # this defines the data types that we are interested in loading from the data sounrce
+    heat_pump_data_types = HeatPumpDataTypes()
 
-    durations = analyse_data(heat_pump_data, the_first_date, the_last_date, args.duration_types)
+    # Load the data (if from file then it will be whatever dates were used last time with influx)
+    # make sure the dates specified align with or are within the data in the pickle file
+    heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='heat_pump_data.pickle' if args.from_pickle else None)
+
+    durations = analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date, args.duration_types)
 
     if args.output_format == "json":
         pprint(durations.to_json())

@@ -8,6 +8,11 @@ class DataIngestor(ABC):
         """
         Implement this in derived class.  It is called by somthing that loads data.  
         This separates the method of loading data from the method of storing it.
+
+        Parameters:
+        - time (datetime): The time at which the data is recorded.
+        - name (str): The name of the data.
+        - value (float/str): The value of the data.
         """
         raise NotImplementedError
 
@@ -16,7 +21,7 @@ class DataByTime(DataIngestor):
         """
         Initializes the heat pump object.
         Parameters:
-        - local_timezone (str): The local timezone of the heat pump.
+        - local_timezone: The local timezone of the heat pump.
         Returns:
         None
         """
@@ -27,9 +32,9 @@ class DataByTime(DataIngestor):
         """
         Called when a data item is loaded.
         Parameters:
-        - time (str): The time at which the data is recorded.
+        - time (datetime): The time at which the data is recorded.
         - name (str): The name of the data.
-        - value (float): The value of the data.
+        - value (float/str): The value of the data.
         Returns:
         None
         """

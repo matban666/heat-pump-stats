@@ -21,8 +21,8 @@ INFLUXDM_URI=<YOUR_INFLUX_URI>
 For convience these can be added to a .env file in the root of the project
 
 ## Datatypes and flux
-You will probably have to edit src/datasource/data_types.py data_source_names to match your friendly entity names in influx
-You may also have to edit the flux queries in src/datasource/influx/influx_queries.py 
+You will probably have to edit src/datasource/heat_pump_data.py info in create_data_types to match your friendly entity names in influx
+You may also have to edit the flux queries in src/datasource/influx/influx_queries.py if your data is structured differently
 
 ## Running
 (venv) $ src/heatpump_summary.py
