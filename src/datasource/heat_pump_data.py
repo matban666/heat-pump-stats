@@ -1,16 +1,14 @@
 import pickle
-from datetime import datetime, timedelta
-from pprint import pprint
 from collections import OrderedDict
 from datasource.data_types import DataTypes, DataTypeFloat, DataTypeString
-from datasource.influx.influx_queries import StringQuery, ValueQuery
-from utils.time import ceil_dt
+from datasource.influx.query_influx import QueryInflux
 from tzlocal import get_localzone
+from datasource.data_ingestor import DataByTime
 
 class HeatPumpData:
     """
     A class representing heat pump data.  Can load data from influx or from a pickle file. SOLID would require these
-    two responsibilities to be separated.
+    two responsibilities to be separated a bit better I think.
     Attributes:
         data (dict): A dictionary to store the heat pump data.
     Methods:
@@ -30,6 +28,8 @@ class HeatPumpData:
         - from_pickle (str): The name of the pickle file to load data from or None to load from influx.
         """        
 
+        self.create_data_types()
+
         self.local_timezone = get_localzone()
 
         if from_pickle is not None:
@@ -37,41 +37,45 @@ class HeatPumpData:
             self._data = self.unpickle_data(filename=from_pickle)    
         else:
             print("Loading from influx...")
-            self._data = {}
 
-            for data_type in DataTypes().get_data_types():
-                print('Querying: ', data_type.get_name())
-                if isinstance(data_type, DataTypeString):
-                    StringQuery(the_first_date, the_last_date, heatpump_data=self, 
-                                field=data_type.get_data_source_name(), 
-                                name=data_type.get_name())
-                elif isinstance(data_type, DataTypeFloat):
-                    ValueQuery(the_first_date, the_last_date, heatpump_data=self, 
-                               measurement=data_type.get_unit(), 
-                               friendly_name=data_type.get_data_source_name(), 
-                               name=data_type.get_name())
-     
-            # save the data so that we can re-run the analysis
+            data_ingestor = DataByTime(self.local_timezone)
+
+            QueryInflux.query_influx(self.data_types, the_first_date, the_last_date, data_ingestor)
+
+            self._data = data_ingestor.get_data()
+
             self.pickle_data() 
 
-    def add_data(self, time, name, value):
-        """
-        Adds data to the heat pump object.  If the time already exists, the data is updated.
-        Parameters:
-        - time (str): The time at which the data is recorded.
-        - name (str): The name of the data.
-        - value (float): The value of the data.
-        Returns:
-        None
-        """
-        time_rounded = ceil_dt(time)
-   
-        local_time = time_rounded.astimezone(self.local_timezone)
+    def create_data_types(self):
+        self.data_types = DataTypes()
+        self.data_types.add_data_types([
+            DataTypeString(name='Operation Mode', data_source_name='Operation Mode_str'),
+            DataTypeString(name='Three Way Valve', data_source_name='3way valve(On:DHW_Off:Space)_str'),
+            DataTypeString(name='Thermostat', data_source_name='Thermostat ON/OFF_str'),
+            DataTypeString(name='Defrost Operation', data_source_name='Defrost Operation_str'),     
+            DataTypeString(name='BUH Step1', data_source_name='BUH Step1_str'),      
+            DataTypeString(name='BUH Step2', data_source_name='BUH Step2_str'),      
+            DataTypeString(name='Freeze Protection For Water Piping', data_source_name='Freeze Protection for water piping_str'),
+            DataTypeString(name='Freeze Protection', data_source_name='Freeze Protection_str'),
+            DataTypeString(name='Low Noise Control', data_source_name='Low noise control_str'),
+            DataTypeString(name='Silent Mode', data_source_name='Silent Mode_str'),
+            DataTypeFloat(name='Power In', data_source_name='Heat Pump 7 1MIN', unit='W'),
+            DataTypeFloat(name='Immersion Power', data_source_name='Immersion 3 1MIN', unit='W'),
+            DataTypeFloat(name='Flow Rate', data_source_name='ESPAltherma - Flow Sensor', unit='l/min'),
+            DataTypeFloat(name='Flow Temp', data_source_name='ESPAltherma - Leaving Water Temperature After BUH', unit='°C'),
+            DataTypeFloat(name='Return Temp', data_source_name='ESPAltherma - Inlet Water Temperature', unit='°C'),
+            DataTypeFloat(name='CH Setpoint', data_source_name='ESPAltherma - RT Setpoint', unit='°C'),
+            DataTypeFloat(name='Delta T', data_source_name='ESPAltherma - Heat Pump Delta T', unit='°C'),
+            DataTypeFloat(name='Flow Setpoint', data_source_name='ESPAltherma - LW Setpoint (main)', unit='°C'),
+            DataTypeFloat(name='DHW Temp', data_source_name='ESPAltherma - Hot Water Tank Temp', unit='°C'),
+            DataTypeFloat(name='Indoor Temp', data_source_name='ESPAltherma - Indoor Temperature', unit='°C'),
+            DataTypeFloat(name='Outdoor Temp', data_source_name='ESPAltherma - Outdoor Air Temperature', unit='°C'),
+            DataTypeFloat(name='Target Delta T', data_source_name='ESPAltherma - Target Delta T', unit='°C'),
+            DataTypeFloat(name='DHW Setpoint', data_source_name='ESPAltherma - DHW Setpoint', unit='°C'),
+        ])
 
-        if local_time in self._data:
-            self._data[local_time][name] = value
-        else:
-            self._data[local_time] = {name: value}
+    def get_data_types(self):
+        return self.data_types.get_data_types()
 
     def pickle_data(self, filename: str='heat_pump_data.pickle'):
         """
@@ -103,6 +107,10 @@ class HeatPumpData:
     def data_by_time(self, the_first_date=None, the_last_date=None):
         """
         Generator to iterate through the sorted heat pump data.
+        The loaded data may be bigger if it was loaded from a pickle file and will be bigger
+        if it was loaded from influx as we query one day before and after the requested dates.
+        So this generator allows us to window into the exact time range that was asked for.
+
         Yields:
         Tuple of (time, data) sorted by time.
 

@@ -8,6 +8,11 @@ class InfluxClient:
     creates the client.
     """
     def __init__(self):
+        """
+        Initialize the InfluxClient object.
+
+        Loading the environment variables for the InfluxDB token, org and url. 
+        """
         self.token = environ.get("INFLUXDB_TOKEN")
         self.org = environ.get("INFLUXDB_ORG")
         self.url = environ.get("INFLUXDM_URI")

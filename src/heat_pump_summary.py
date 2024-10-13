@@ -18,7 +18,7 @@ def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=[
     periods = DurationsManager(duration_types)
 
     # current_data has all the data types as keys and their default values as values
-    current_data = {data_type.get_name(): data_type.get_default_value() for data_type in DataTypes()._data_types}
+    current_data = {data_type.get_name(): data_type.get_default_value() for data_type in heat_pump_data.get_data_types()}
 
     for date_time, data_frame in heat_pump_data.data_by_time(the_first_date, the_last_date):
         # Each incomimg data frame will have one or more keys depending on the 
