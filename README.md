@@ -32,6 +32,7 @@ You may also have to edit the flux queries in src/datasource/influx/influx_queri
 
 ## ToDo
 
+- Move datasource into its own project as it is re-usable - all it time-series-datasource (it's tied to influx but could be agnostic)
 - Possible Bug: energy for defrosts in CH where DHW is used are counted against DHW, is that correct
 - If a defrost in CH requires DHW, this can happen before the defrost state is entered and the CH sesssion is split - see comments in integration tests
 - HeatPumpState class to take complxity out of Duration
