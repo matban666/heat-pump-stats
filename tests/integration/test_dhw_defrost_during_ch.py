@@ -41,3 +41,10 @@ def test_dhw_defrost_during_ch():
     assert(len(json['session_durations'][1]['cycles']) == 7)
 
     # pprint(json)
+
+
+# TODO:
+# Test heat_pump_data_dhw_before_defrost_in_ch.pickle
+# This is a case where the DHW is called for before the defrost in a CH session
+# It results in the CH session being splut into two parts
+# It would be nicer to show this as a single CH session but not sure now to do that without making the code more complex

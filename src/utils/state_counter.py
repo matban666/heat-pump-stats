@@ -23,16 +23,26 @@ class StateCounter():
 
 class AboveZeroStateCounter():
     def __init__(self):
-        self._state = 0
+        self._state = None
         self._count = 0
         self._on = False
 
     def update(self, state):
+        if self._state is None:
+            # First state we just want to know what it is and store it
+            # We are interested in transitions from 0 to > 0 so if it comes in
+            # as > 0 we don't want to count it
+            self._state = state
+
+            if state > 0:
+                self._on = True
+            return
+
         if self._on == False and state > 0:
             self._count += 1
-            self._firendly_state = 'ON'
+            self._on = True
         elif self._on and state == 0:
-            self._firendly_state = 'OFF'
+            self._on = False
 
     def get_count(self):
         return self._count

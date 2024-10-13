@@ -44,6 +44,7 @@ class HeatPumpData:
 
             self._data = data_ingestor.get_data()
 
+            # Pickle the data so that we can re-run the script without querying influx
             self.pickle_data() 
 
     def create_data_types(self):
@@ -72,6 +73,8 @@ class HeatPumpData:
             DataTypeFloat(name='Outdoor Temp', data_source_name='ESPAltherma - Outdoor Air Temperature', unit='°C'),
             DataTypeFloat(name='Target Delta T', data_source_name='ESPAltherma - Target Delta T', unit='°C'),
             DataTypeFloat(name='DHW Setpoint', data_source_name='ESPAltherma - DHW Setpoint', unit='°C'),
+            DataTypeFloat(name='INV Primary Current', data_source_name='ESPAltherma - INV Primary Current', unit='A'),
+            DataTypeFloat(name='INV Secondary Current', data_source_name='ESPAltherma - INV Secondary Current', unit='A'),
         ])
 
     def get_data_types(self):

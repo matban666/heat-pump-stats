@@ -19,6 +19,7 @@ class Duration():
         self._freeze_protection_water_piping_counter = StateCounter()
         self._low_noise_control_counter = StateCounter()
         self._silent_mode_counter = StateCounter()
+        self._compressor_starts_counter = AboveZeroStateCounter()
 
         self._outside_temp = RollingMinMaxMean()
         self._delta_t = RollingMinMaxMean()
@@ -74,6 +75,7 @@ class Duration():
         self._freeze_protection_water_piping_counter.update(self._current_frame['Freeze Protection For Water Piping'])
         self._low_noise_control_counter.update(self._current_frame['Low Noise Control'])
         self._silent_mode_counter.update(self._current_frame['Silent Mode'])
+        self._compressor_starts_counter.update(self._current_frame['INV Secondary Current'])
 
         # Update the energy rolling aggregates
         self._energy_in.update(power_in)
@@ -166,6 +168,7 @@ class Duration():
                 'freeze_protection_water_piping_count': self._freeze_protection_water_piping_counter.get_count(),
                 'low_noise_control_count': self._low_noise_control_counter.get_count(),
                 'silent_mode_count': self._silent_mode_counter.get_count(),
+                'compressor_starts_count': self._compressor_starts_counter.get_count(),
                 'outside_temp': self._outside_temp.to_json(),
                 'delta_t': self._delta_t.to_json(),
                 'flow_setpoint': self._flow_setpoint.to_json(),
@@ -182,7 +185,7 @@ class Duration():
                 'cop_ch': self._cop_ch,
                 'cop_dhw': self._cop_dhw,
                 'cop_dhw_inc_immersion': self._cop_dhw_inc_immersion,
-                'cop_average_inc_immersion': self._cop_average_inc_immersion
+                'cop_average_inc_immersion': self._cop_average_inc_immersion,
             }
 
     def __str__(self):
@@ -199,6 +202,7 @@ class Duration():
             f"Freeze Protection: {self._freeze_protection_counter.get_count()}, " + \
             f"Freeze Protection(Pipes): {self._freeze_protection_water_piping_counter.get_count()}, " + \
             f"Low Noise: {self._low_noise_control_counter.get_count()}, " + \
+            f"Compressor Starts: {self._compressor_starts_counter.get_count()}, " + \
             f"Silent Mode: {self._silent_mode_counter.get_count()}\n" + \
             f"Outside Temp: {str(self._outside_temp)}\n" + \
             f"Heating Energy Out: {self._energy_out}, Energy In: {self._energy_in}, Standby Energy: {self._energy_standby}, Immersion Energy: {self._energy_immersion}, BUH Energy: {self._energy_buh}\n" 
