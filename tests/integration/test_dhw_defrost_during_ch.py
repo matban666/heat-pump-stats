@@ -1,9 +1,9 @@
 import pytz
 from datetime import datetime
 from datasource.data_loader import DataLoader
-from heat_pump_data_types import HeatPumpDataTypes
+from heat_pump_duration_model.heat_pump_data_types import HeatPumpDataTypes
 from pprint import pprint
-from durations_manager import DurationsManager
+from heat_pump_duration_model.durations_manager import DurationsManager
 
 
 def test_defrost_during_ch():

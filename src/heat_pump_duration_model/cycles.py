@@ -1,11 +1,11 @@
-import duration_factory
+import heat_pump_duration_model.duration_factory
 
 class Cycles:
     def __init__(self) -> None:
         self._cycles = []
         
     def update_cycle(self, data_frame):
-        factory = duration_factory.DurationFactory(duration_factory.DurationTypes.CYCLE)
+        factory = heat_pump_duration_model.duration_factory.DurationFactory(heat_pump_duration_model.duration_factory.DurationTypes.CYCLE)
 
         new_cycle = factory.get_factory_func()(data_frame, self._cycles[-1] if len(self._cycles) > 0 else None)
         if new_cycle is not None:

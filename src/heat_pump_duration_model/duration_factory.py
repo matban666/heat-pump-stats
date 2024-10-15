@@ -1,7 +1,7 @@
 from enum import Enum
-from session_duration import SessionDuration
-from calendar_duration import CalendarDuration
-from cycle_duration import CycleOffDuration, CycleOnDuration
+from heat_pump_duration_model.session_duration import SessionDuration
+from heat_pump_duration_model.calendar_duration import CalendarDuration
+from heat_pump_duration_model.cycle_duration import CycleOffDuration, CycleOnDuration
 
 class DurationTypes(Enum):
     DAY = 'Day'

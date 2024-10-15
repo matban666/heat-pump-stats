@@ -1,5 +1,5 @@
-from durations import Durations
-from duration_factory import DurationFactory, DurationTypes
+from heat_pump_duration_model.durations import Durations
+from heat_pump_duration_model.duration_factory import DurationFactory, DurationTypes
 
 class DurationsManager():
     """

@@ -1,5 +1,5 @@
-from duration import Duration
-import cycles
+from heat_pump_duration_model.duration import Duration
+import heat_pump_duration_model.cycles
 
 class SessionDuration(Duration):
     """
@@ -11,7 +11,7 @@ class SessionDuration(Duration):
     """
 
     def __init__(self, name, data_frame):   
-        self._cycles = cycles.Cycles()
+        self._cycles = heat_pump_duration_model.cycles.Cycles()
 
         super().__init__(name, data_frame)
 

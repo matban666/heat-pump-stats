@@ -7,7 +7,7 @@ from datasource.data_ingestor import DataByTime
 
 class DataLoader:
     """
-    A class representing heat pump data.  Can load data from influx or from a pickle file. 
+    A class to loed time series data data.  Can load data from influx or from a pickle file. 
     Currently tied to influx but could be extended to other data sources.
 
     Attributes:

@@ -1,5 +1,5 @@
-from new_session_subscriber import NewSessionSubscriber
-import duration_factory 
+from heat_pump_duration_model.new_session_subscriber import NewSessionSubscriber
+import heat_pump_duration_model.duration_factory 
 
 class Durations(NewSessionSubscriber):
     """
@@ -7,7 +7,7 @@ class Durations(NewSessionSubscriber):
     Multiple instances of this can be used to track different types of durations
     """
 
-    def __init__(self, duration_factory: duration_factory.DurationFactory, subscribers=[]):
+    def __init__(self, duration_factory: heat_pump_duration_model.duration_factory.DurationFactory, subscribers=[]):
         self._duration_factory = duration_factory
         self._durations = []
         self._subscribers = subscribers

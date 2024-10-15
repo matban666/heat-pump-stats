@@ -1,5 +1,5 @@
-from duration import Duration
-from new_session_subscriber import NewSessionSubscriber
+from heat_pump_duration_model.duration import Duration
+from heat_pump_duration_model.new_session_subscriber import NewSessionSubscriber
 from collections import defaultdict
 
 class CalendarDuration(Duration, NewSessionSubscriber):

@@ -1,12 +1,12 @@
 from datetime import datetime
 from pprint import pprint
 from datasource.data_loader import DataLoader
-from durations_manager import DurationsManager
+from heat_pump_duration_model.durations_manager import DurationsManager
 from argparse import ArgumentParser
 from dotenv import load_dotenv
-from duration_factory import DurationFactory
+from heat_pump_duration_model.duration_factory import DurationFactory
 from tzlocal import get_localzone
-from heat_pump_data_types import HeatPumpDataTypes
+from heat_pump_duration_model.heat_pump_data_types import HeatPumpDataTypes
 
 """
 This script creates a summary of the heat pump data. 

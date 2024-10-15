@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from duration import Duration
 from datetime import timedelta
+from heat_pump_duration_model.duration import Duration
 
 class CycleDuration(Duration, ABC):
     def __init__(self, duration_type, data_frame):
