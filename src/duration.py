@@ -194,7 +194,7 @@ class Duration():
               
         result = \
             '-' * 20 + \
-            f'{self.get_title()}, Start: {self.get_first_time().astimezone().strftime('%Y:%m:%d %H:%M:%S')}, End: {self.get_last_time().astimezone().strftime('%Y:%m:%d %H:%M:%S')}, Duration: {self.get_duration()}' + \
+            f'{self.get_title()}, Start: {self.get_first_time().astimezone().strftime('%Y-%m-%dT%H:%M:%S')}, End: {self.get_last_time().astimezone().strftime('%Y-%m-%dT%H:%M:%S')}, Duration: {self.get_duration()}' + \
             '-' * 20 + '\n' + \
             f"Defrosts: {self._defrost_counter.get_count()}, " + \
             f"BUH1: {self._bh1_counter.get_count()}, " + \
