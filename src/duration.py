@@ -21,6 +21,7 @@ class Duration():
         self._silent_mode_counter = StateCounter()
         self._compressor_starts_counter = AboveZeroStateCounter()
 
+        self._inside_temp = RollingMinMaxMean()
         self._outside_temp = RollingMinMaxMean()
         self._delta_t = RollingMinMaxMean()
         self._flow_setpoint = RollingMinMaxMean()
@@ -62,6 +63,7 @@ class Duration():
         friendly_operation_mode = self.get_friendly_operation_mode(self._current_frame)
 
         # Update the rolling min/max/mean values
+        self._inside_temp.update(self._current_frame['Indoor Temp'])
         self._outside_temp.update(self._current_frame['Outdoor Temp'])
         self._delta_t.update(self._current_frame['Delta T'])
         self._flow_setpoint.update(self._current_frame['Flow Setpoint'])
@@ -169,6 +171,7 @@ class Duration():
                 'low_noise_control_count': self._low_noise_control_counter.get_count(),
                 'silent_mode_count': self._silent_mode_counter.get_count(),
                 'compressor_starts_count': self._compressor_starts_counter.get_count(),
+                'inside_temp': self._inside_temp.to_json(),
                 'outside_temp': self._outside_temp.to_json(),
                 'delta_t': self._delta_t.to_json(),
                 'flow_setpoint': self._flow_setpoint.to_json(),

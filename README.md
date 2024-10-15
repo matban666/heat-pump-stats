@@ -1,5 +1,5 @@
 # heat-pump-stats
-Utility to load ESPAltherma heat pump metrics from Home Assistant Influx and summarise
+Utilities to load ESPAltherma heat pump metrics from Home Assistant Influx and summarise
 
 # Pre Requisites
 - ESP Altherma https://raomin.github.io/ESPAltherma/
@@ -26,9 +26,11 @@ You may also have to edit the flux queries in src/datasource/influx/influx_queri
 
 ## Running
 (venv) $ src/heatpump_summary.py
+(venv) $ src/heat_pump_ch_energy_by_temp.py
 
 ## Help
 (venv) $ src/heatpump_summary.py --help
+(venv) $ src/heat_pump_ch_energy_by_temp.py --help
 
 ## ToDo
 
