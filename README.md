@@ -35,6 +35,7 @@ You may also have to edit the flux queries in src/datasource/influx/influx_queri
 - Move datasource into its own project as it is re-usable - all it time-series-datasource (it's tied to influx but could be agnostic)
 - Possible Bug: energy for defrosts in CH where DHW is used are counted against DHW, is that correct
 - If a defrost in CH requires DHW, this can happen before the defrost state is entered and the CH sesssion is split - see comments in integration tests
+- If datatype objects were used to store the values and moved through the pipeline then they could be used for unit display and sanity checking
 - HeatPumpState class to take complxity out of Duration
 - HeatPumpLogic class to collect the state change logic from the DurationFactory
 - Influx queries can probably be done as two queries, one for string and one for value instead of a seperate query for every metric

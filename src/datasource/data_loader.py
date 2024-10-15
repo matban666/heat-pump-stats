@@ -30,6 +30,8 @@ class DataLoader:
         - from_pickle (str): The name of the pickle file to load data from or None to load from influx.
         """        
 
+        self.data_types = data_types
+
         self.local_timezone = get_localzone()
 
         if from_pickle is not None:
@@ -88,12 +90,22 @@ class DataLoader:
         - the_first_date (datetime): The first date to start iterating from.
         - the_last_date (datetime): The last date to iterate to.
         """
+        # current_data has all the data types as keys and their default values as values
+        current_data = {data_type.get_name(): data_type.get_default_value() for data_type in self.data_types.get_data_types()}
+
         for time, data in self.get_sorted_data().items():
+            for k, v, in data.items():
+                # update our current data with the new data to fill in any missing values
+                current_data[k] = v
+
+
             if the_first_date is not None and time < the_first_date:
+                # we are in the extra early data before the requested time window so ignore it
                 continue
 
             if the_last_date is not None and time > the_last_date:
+                # we have gone past the requested time window so break
                 break
 
-            yield time, data
+            yield time, current_data
 

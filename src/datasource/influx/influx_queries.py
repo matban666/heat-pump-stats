@@ -22,7 +22,9 @@ class InfluxQuery(InfluxClient):
         super().__init__()
         
         self.name = name
-        self.adjusted_start_time = first_date - timedelta(days=1) # this is because some values rarely change
+
+        # some values rarely change so we go back a day to ensure our first data frame has all values
+        self.adjusted_start_time = first_date - timedelta(days=1) 
         self.adjusted_stop_time = last_date + timedelta(days=1) # this is because?
 
         self._sample_rate = int(int(environ.get('GRANULARITY', 30)) / 2)

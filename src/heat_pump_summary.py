@@ -9,9 +9,10 @@ from duration_factory import DurationFactory
 from os import environ
 from tzlocal import get_localzone
 from heat_pump_data_types import HeatPumpDataTypes
+from utils.temp_sanity_checker import TempSanityChecker
 
 
-def analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date, duration_types=['session', 'all_time']):
+def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
     """
     Create the period manager, this processes the data into time periods.
     Time periods can be sessions or calendar durations.
@@ -28,8 +29,8 @@ def analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_
 
     periods = DurationsManager(duration_types)
 
-    # current_data has all the data types as keys and their default values as values
-    current_data = {data_type.get_name(): data_type.get_default_value() for data_type in heat_pump_data_types.get_data_types()}
+    outdoor_temp = TempSanityChecker()
+    indoor_temp = TempSanityChecker()
 
     for date_time, data_frame in heat_pump_data.data_by_time(the_first_date, the_last_date):
         # Each incomimg data frame will have one or more keys depending on the 
@@ -37,12 +38,14 @@ def analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_
         # values in current_data and update the values as they come in.  This
         # way we always have a full set of values to send to the period manager
 
-        for k, v, in data_frame.items():
-            current_data[k] = v
+        data_frame['DateTime'] = date_time
 
-        current_data['DateTime'] = date_time
+        # I don't think this is the best place for this, the data types could indicate the type
+        # of sanitation required.  Then this could be done in the data loader
+        data_frame['Outdoor Temp'] = outdoor_temp.sanity_check(data_frame['Outdoor Temp'])
+        data_frame['Indoor Temp'] = indoor_temp.sanity_check(data_frame['Indoor Temp'])
 
-        periods.update_periods(current_data)
+        periods.update_periods(data_frame)
 
     return periods
 
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     # make sure the dates specified align with or are within the data in the pickle file
     heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='data.pickle' if args.from_pickle else None)
 
-    durations = analyse_data(heat_pump_data, heat_pump_data_types, the_first_date, the_last_date, args.duration_types)
+    durations = analyse_data(heat_pump_data, the_first_date, the_last_date, args.duration_types)
 
     if args.output_format == "json":
         pprint(durations.to_json())
