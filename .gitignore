@@ -10,3 +10,4 @@ __pycache__/
 *.pyz
 *.pyzw
 heat_pump_data.pickle
+.env.influx

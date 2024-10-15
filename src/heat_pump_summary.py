@@ -58,6 +58,7 @@ if __name__ == "__main__":
     # Load the environment variables
     load_dotenv()
     load_dotenv(dotenv_path='.env.testing')
+    load_dotenv(dotenv_path='.env.influx')
 
     local_timezone = get_localzone()
 

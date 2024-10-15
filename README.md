@@ -18,7 +18,7 @@ The environment needs:
 INFLUXDB_TOKEN=<YOUR_TOKEN>
 INFLUXDB_ORG=<YOUR_ORG>
 INFLUXDM_URI=<YOUR_INFLUX_URI>
-For convience these can be added to a .env file in the root of the project
+For convience these can be added to a .env.influx file in the root of the project
 
 ## Datatypes and flux
 You will probably have to edit src/datasource/heat_pump_data.py info in create_data_types to match your friendly entity names in influx

@@ -9,7 +9,7 @@ def power_from_flow(flow: float, temperature_difference: float):
     :param flow: The flow rate in litres per minute
     :param temperature_difference: The temperature difference in degrees Celsius
     """
-    return (flow / 60.0) * temperature_difference * 4.1868
+    return (flow / 60.0) * 4.1868 * temperature_difference
 
 def cop(power_in: float, power_out: float):
     """

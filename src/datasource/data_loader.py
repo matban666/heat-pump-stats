@@ -1,4 +1,5 @@
 import pickle
+from os import environ
 from collections import OrderedDict
 from datasource.influx.query_influx import QueryInflux
 from tzlocal import get_localzone
@@ -35,7 +36,7 @@ class DataLoader:
             print("Loading from last pickle...")
             self._data = self.unpickle_data(filename=from_pickle)    
         else:
-            print("Loading from influx...")
+            print(f"Loading from influx {environ.get("INFLUXDM_URI")}...")
 
             data_ingestor = DataByTime(self.local_timezone)
 
