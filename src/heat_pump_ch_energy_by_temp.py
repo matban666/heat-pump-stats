@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # Create a DuratonManager object by reading the data in and processing it into the required durations
     durations = DurationsManager.from_data(heat_pump_data, args.start_time, args.end_time, ['day'])
 
-    # Output the durations in the required format
+    # Output the data in the required format
     day_durations = durations.to_json()['day_durations']
 
     for day in sorted(day_durations, key=lambda x: x['outside_temp']['mean']):
