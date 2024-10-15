@@ -2,57 +2,12 @@ from datetime import datetime
 from pprint import pprint
 from datasource.data_loader import DataLoader
 from durations_manager import DurationsManager
-from datasource.data_types import DataTypes
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 from duration_factory import DurationFactory
 from os import environ
 from tzlocal import get_localzone
 from heat_pump_data_types import HeatPumpDataTypes
-from utils.temp_sanity_checker import TempSanityChecker
-
-
-def analyse_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
-    """
-    Create the period manager, this processes the data into time periods.
-    Time periods can be sessions or calendar durations.
-    A session is a period of time where the heat pump was was idle or being asked to heat for
-    either DHW or CH
-
-    Parameters:
-    - heat_pump_data (DataLoader): The data to analyze.
-    - heat_pump_data_types (HeatPumpDataTypes): The data types to analyze.
-    - the_first_date (datetime): The start date for the data analysis.
-    - the_last_date (datetime): The end date for the data analysis.
-    - duration_types (list): The duration types to analyze.
-    """
-
-    periods = DurationsManager(duration_types)
-
-    outdoor_temp = TempSanityChecker()
-    indoor_temp = TempSanityChecker()
-
-    for date_time, data_frame in heat_pump_data.data_by_time(the_first_date, the_last_date):
-        # Each incomimg data frame will have one or more keys depending on the 
-        # data available for the timestamp. Therefore, we keep track of all 
-        # values in current_data and update the values as they come in.  This
-        # way we always have a full set of values to send to the period manager
-
-        data_frame['DateTime'] = date_time
-
-        # I don't think this is the best place for this, the data types could indicate the type
-        # of sanitation required.  Then this could be done in the data loader
-        data_frame['Outdoor Temp'] = outdoor_temp.sanity_check(data_frame['Outdoor Temp'])
-        data_frame['Indoor Temp'] = indoor_temp.sanity_check(data_frame['Indoor Temp'])
-
-        periods.update_periods(data_frame)
-
-    return periods
-
-
-def parse_datetime(datetime_str):
-    return datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S")
-
 
 """
 This script creates a summary of the heat pump data. 
@@ -72,11 +27,12 @@ if __name__ == "__main__":
                         action="store_true")
     parser.add_argument("--start_time", 
                         help="The start time for the data analysis (format: YYYY-MM-DDTHH:MM:SS).", 
-                        type=parse_datetime, 
+                        type=lambda datetime_str: datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S"), 
                         default=datetime(year=2024, month=9, day=6, tzinfo=local_timezone))
     parser.add_argument("--end_time", 
                         help="The end time for the data analysis (format: YYYY-MM-DDTHH:MM:SS)., leave out to run to 'now'.", 
-                        type=parse_datetime, default=datetime.now(local_timezone))
+                        type=lambda datetime_str: datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S"), 
+                        default=datetime.now(local_timezone))
     parser.add_argument("--output_format", 
                         help="The output format for the data analysis.", 
                         default="text", 
@@ -100,7 +56,7 @@ if __name__ == "__main__":
     # make sure the dates specified align with or are within the data in the pickle file
     heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='data.pickle' if args.from_pickle else None)
 
-    durations = analyse_data(heat_pump_data, the_first_date, the_last_date, args.duration_types)
+    durations = DurationsManager.from_data(heat_pump_data, the_first_date, the_last_date, args.duration_types)
 
     if args.output_format == "json":
         pprint(durations.to_json())

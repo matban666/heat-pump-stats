@@ -84,20 +84,24 @@ class DataLoader:
         So this generator allows us to window into the exact time range that was asked for.
 
         Yields:
-        Tuple of (time, data) sorted by time.
+        data in time order
 
         Parameters:
         - the_first_date (datetime): The first date to start iterating from.
         - the_last_date (datetime): The last date to iterate to.
         """
-        # current_data has all the data types as keys and their default values as values
+
+        # Each incomimg data frame will have one or more keys depending on the 
+        # data available for the timestamp. Therefore, we keep track of all 
+        # values in current_data and update the values as they come in.  This
+        # way we always have a full set of values to send to the period manager
         current_data = {data_type.get_name(): data_type.get_default_value() for data_type in self.data_types.get_data_types()}
 
         for time, data in self.get_sorted_data().items():
+
             for k, v, in data.items():
                 # update our current data with the new data to fill in any missing values
                 current_data[k] = v
-
 
             if the_first_date is not None and time < the_first_date:
                 # we are in the extra early data before the requested time window so ignore it
@@ -107,5 +111,7 @@ class DataLoader:
                 # we have gone past the requested time window so break
                 break
 
-            yield time, current_data
+            current_data['DateTime'] = time
+
+            yield current_data
 

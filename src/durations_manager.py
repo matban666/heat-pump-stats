@@ -1,7 +1,6 @@
 from durations import Durations
 from duration_factory import DurationFactory, DurationTypes
 
-
 class DurationsManager():
     """
     Owns all the different types of durations and passes each data frame to them
@@ -35,6 +34,34 @@ class DurationsManager():
         # Always add the session duration as it is used by the other durations
         sessions = Durations(DurationFactory(DurationTypes.SESSION), subscribers=subscribers)
         self._durations.append(sessions)
+
+    @staticmethod
+    def from_data(heat_pump_data, the_first_date, the_last_date, duration_types=['session', 'all_time']):
+        """
+        Create the period manager, this processes the data into time periods.
+        Time periods can be sessions or calendar durations.
+        A session is a period of time where the heat pump was was idle or being asked to heat for
+        either DHW or CH
+
+        Parameters:
+        - heat_pump_data (DataLoader): The data to analyze.
+        - heat_pump_data_types (HeatPumpDataTypes): The data types to analyze.
+        - the_first_date (datetime): The start date for the data analysis.
+        - the_last_date (datetime): The end date for the data analysis.
+        - duration_types (list): The duration types to analyze.
+        """
+
+        periods = DurationsManager(duration_types)
+
+        for data_frame in heat_pump_data.data_by_time(the_first_date, the_last_date):
+
+            # The data types could indicate the type
+            # of sanitation required.  Then this could be done in the data loader
+            data_frame = heat_pump_data.data_types.sanity_check(data_frame)
+
+            periods.update_periods(data_frame)
+
+        return periods
 
     def __str__(self):
         result = f''

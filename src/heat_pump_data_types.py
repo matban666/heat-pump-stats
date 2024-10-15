@@ -1,8 +1,11 @@
 from datasource.data_types import DataTypes, DataTypeFloat, DataTypeString
+from utils.temp_sanity_checker import TempSanityChecker
 
 class HeatPumpDataTypes():
     def __init__(self):
         self.create_data_types()
+        self.sanity_check_outdoor_temp = TempSanityChecker()
+        self.sanity_check_indoor_temp = TempSanityChecker()
 
     def create_data_types(self):
         self.data_types = DataTypes()
@@ -33,6 +36,11 @@ class HeatPumpDataTypes():
             DataTypeFloat(name='INV Primary Current', data_source_name='ESPAltherma - INV Primary Current', unit='A'),
             DataTypeFloat(name='INV Secondary Current', data_source_name='ESPAltherma - INV Secondary Current', unit='A'),
         ])
+
+    def sanity_check(self, data_frame):
+        data_frame['Outdoor Temp'] = self.sanity_check_outdoor_temp.check(data_frame['Outdoor Temp'])
+        data_frame['Indoor Temp'] = self.sanity_check_indoor_temp.check(data_frame['Indoor Temp'])
+        return data_frame
 
     def get_data_types(self):
         return self.data_types.get_data_types()

@@ -7,7 +7,7 @@ class TempSanityChecker:
         self.current_value = None
         self.tolerance = tolerance
 
-    def sanity_check(self, new_value):
+    def check(self, new_value):
         if self.current_value is None:
             # if this is the first value then we blindly trust
             self.current_value = new_value

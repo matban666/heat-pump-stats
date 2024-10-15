@@ -1,9 +1,9 @@
 import pytz
 from datetime import datetime
-from heat_pump_summary import analyse_data
 from datasource.data_loader import DataLoader
 from heat_pump_data_types import HeatPumpDataTypes
 from pprint import pprint
+from durations_manager import DurationsManager
 
 
 def test_defrost_during_ch():
@@ -14,7 +14,7 @@ def test_defrost_during_ch():
     #Load the data (if from file then it will be whatever dates were used last time with influx)
     heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='tests/integration/heat_pump_data_defrost_during_ch.pickle')
 
-    periods = analyse_data(heat_pump_data, the_first_date, the_last_date)
+    periods = DurationsManager.from_data(heat_pump_data, the_first_date, the_last_date)
 
     json = periods.to_json()
 
@@ -35,7 +35,7 @@ def test_dhw_defrost_during_ch():
     #Load the data (if from file then it will be whatever dates were used last time with influx)
     heat_pump_data = DataLoader(the_first_date, the_last_date, heat_pump_data_types, from_pickle='tests/integration/heat_pump_data_dhw_defrost_during_ch.pickle')
 
-    periods = analyse_data(heat_pump_data, the_first_date, the_last_date)
+    periods = DurationsManager.from_data(heat_pump_data, the_first_date, the_last_date)
 
     json = periods.to_json()
 
