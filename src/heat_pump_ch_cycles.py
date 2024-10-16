@@ -9,7 +9,7 @@ from tzlocal import get_localzone
 from heat_pump_duration_model.heat_pump_data_types import HeatPumpDataTypes
 
 """
-This script creates a summary input and output energy by temperature 
+This script creates a summary of CH cycles. 
 """
 if __name__ == "__main__":
     # Load the environment variables if they are in files
@@ -44,12 +44,14 @@ if __name__ == "__main__":
     heat_pump_data = DataLoader(args.start_time, args.end_time, heat_pump_data_types, from_pickle='data.pickle' if args.from_pickle else None)
 
     # Create a DuratonManager object by reading the data in and processing it into the required durations
-    durations = DurationsManager.from_data(heat_pump_data, args.start_time, args.end_time, ['day'])
+    durations = DurationsManager.from_data(heat_pump_data, args.start_time, args.end_time, ['session'])
 
     # Output the data in the required format
-    day_durations = durations.to_json()['day_durations']
+    sessions = durations.to_json()['session_durations']
 
-    for day in sorted(day_durations, key=lambda x: x['outside_temp']['mean']):
-        # pprint(day)
-        print(f"Day: {day['start_time']}, mean outside temp: {day['outside_temp']['mean']:.1f}, mean inside temp: {day['inside_temp']['mean']:.1f}, flow setpoint mean: {day['flow_setpoint']['mean']:.1f}, wc offset mean: {day['wc_offset']['mean']:.1f}, input energy: {day['energy_ch_in']:.1f}, output energy: {day['energy_ch_out']:.1f}, cop {day['cop_ch']:.2f}")
-
+    for session in filter(lambda x: x['title'] == 'CH', sessions):
+        # pprint(session)
+        # break
+        for cycle in filter(lambda x: x['state'] == 'ON' and x['duration'] != "0:00:00", session['cycles']):
+            print(f"Cycle: {cycle['start_time']}, Length: {cycle['duration']}, OUT: {cycle['outside_temp']['last']:.1f}, IN: {cycle['inside_temp']['last']:.1f}, Flow SP: {cycle['flow_setpoint']['last']:.1f}, Flow: {cycle['flow_temp']['last']:.1f}, WC Off: {cycle['wc_offset']['last']:.1f}, Elec: {cycle['energy_ch_in']:.1f}, Heat: {cycle['energy_ch_out']:.1f}, Flow Over: {cycle['flow_temp']['last'] - cycle['flow_setpoint']['last']:.1f}, Room Over: {cycle['inside_temp']['last'] - cycle['room_setpoint']['last']:.1f}, COP {cycle['cop_ch']:.1f}")
+            # pprint(cycle)

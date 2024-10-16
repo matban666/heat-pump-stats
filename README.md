@@ -43,7 +43,7 @@ Tested with influx local instance v2.6.0 and cloud version 3
 
 - Move datasource into its own project as it is re-usable - all it time-series-datasource (it's tied to influx but could be agnostic)
 - Possible Bug: energy for defrosts in CH where DHW is used are counted against DHW, is that correct
-- If a defrost in CH requires DHW, this can happen before the defrost state is entered and the CH sesssion is split - see comments in integration tests
+- If a defrost in CH requires DHW, this can happen before the defrost state is entered and the CH sesssion is split  - see comments in integration tests (1 minute on 2024-10-14 at 07:42) 
 - If datatype objects were used to store the values and moved through the pipeline then they could be used for unit display and sanity checking
 - HeatPumpState class to take complxity out of Duration
 - HeatPumpLogic class to collect the state change logic from the DurationFactory

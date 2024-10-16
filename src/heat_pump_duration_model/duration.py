@@ -21,10 +21,13 @@ class Duration():
         self._silent_mode_counter = StateCounter()
         self._compressor_starts_counter = AboveZeroStateCounter()
 
+        self._room_setpoint = RollingMinMaxMean()
         self._inside_temp = RollingMinMaxMean()
         self._outside_temp = RollingMinMaxMean()
         self._delta_t = RollingMinMaxMean()
         self._flow_setpoint = RollingMinMaxMean()
+        self._flow_temp = RollingMinMaxMean()
+        self._flow_rate = RollingMinMaxMean()
         self._wc_offset = RollingMinMaxMean()
 
         granularity = int(environ.get('GRANULARITY', 30))
@@ -63,10 +66,13 @@ class Duration():
         friendly_operation_mode = self.get_friendly_operation_mode(self._current_frame)
 
         # Update the rolling min/max/mean values
+        self._room_setpoint.update(self._current_frame['CH Setpoint'])
         self._inside_temp.update(self._current_frame['Indoor Temp'])
         self._outside_temp.update(self._current_frame['Outdoor Temp'])
         self._delta_t.update(self._current_frame['Delta T'])
         self._flow_setpoint.update(self._current_frame['Flow Setpoint'])
+        self._flow_temp.update(self._current_frame['Flow Temp'])
+        self._flow_rate.update(self._current_frame['Flow Rate'])
         self._wc_offset.update(self._flow_setpoint.current_value - self._outside_temp.current_value)
 
         # Update the state counters
@@ -171,10 +177,13 @@ class Duration():
                 'low_noise_control_count': self._low_noise_control_counter.get_count(),
                 'silent_mode_count': self._silent_mode_counter.get_count(),
                 'compressor_starts_count': self._compressor_starts_counter.get_count(),
+                'room_setpoint': self._room_setpoint.to_json(),
                 'inside_temp': self._inside_temp.to_json(),
                 'outside_temp': self._outside_temp.to_json(),
                 'delta_t': self._delta_t.to_json(),
                 'flow_setpoint': self._flow_setpoint.to_json(),
+                'flow_temp': self._flow_temp.to_json(),
+                'flow_rate': self._flow_rate.to_json(),
                 'wc_offset': self._wc_offset.to_json(),
                 'energy_out': float(self._energy_out),
                 'energy_in': float(self._energy_in),
@@ -207,9 +216,9 @@ class Duration():
             f"Low Noise: {self._low_noise_control_counter.get_count()}, " + \
             f"Compressor Starts: {self._compressor_starts_counter.get_count()}, " + \
             f"Silent Mode: {self._silent_mode_counter.get_count()}\n" + \
-            f"Outside Temp: {str(self._outside_temp)}\n" + \
-            f"Heating Energy Out: {self._energy_out}, Energy In: {self._energy_in}, Standby Energy: {self._energy_standby}, Immersion Energy: {self._energy_immersion}, BUH Energy: {self._energy_buh}\n" 
-
+            f"Heating Energy Out: {self._energy_out}, Energy In: {self._energy_in}, Standby Energy: {self._energy_standby}, Immersion Energy: {self._energy_immersion}, BUH Energy: {self._energy_buh}\n" + \
+            f"Outside Temp: {str(self._outside_temp)}\n" 
+ 
         result += self._on_to_str()
 
         return result

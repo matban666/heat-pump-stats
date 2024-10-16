@@ -6,8 +6,12 @@ class RollingMinMaxMean():
         self._max = float('-inf')
         self._mean = 0
         self._current_value = None
+        self._first_value = None
 
     def update(self, new_value):
+        if self._first_value is None:
+            self._first_value = new_value
+
         self._current_value = new_value
         self._count += 1
         self._sum += new_value
@@ -30,6 +34,14 @@ class RollingMinMaxMean():
         return self._max
     
     @property
+    def first(self):
+        return self._first_value
+    
+    @property
+    def last(self):
+        return self._current_value
+    
+    @property
     def current_value(self):
         return self._current_value
     
@@ -37,8 +49,10 @@ class RollingMinMaxMean():
         return {
             "min": self.min,
             "max": self.max,
-            "mean": self.mean
+            "mean": self.mean,
+            "last": self._current_value,
+            "first": self._first_value
         }
     
     def __str__(self):
-        return f'Min: {self.min:.1f}, Max: {self.max:.1f}, Mean: {self.mean:.1f}'
+        return f'Min: {self.min:.1f}, Max: {self.max:.1f}, Mean: {self.mean:.1f}, First: {self._first_value:.1f}, Last: {self._current_value:.1f}'

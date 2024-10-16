@@ -38,6 +38,19 @@ class SessionDuration(Duration):
 
         result = ''
 
+        if friendly_operation_mode == 'CH':
+            result += f'Flow Setpoint: {self._flow_setpoint}\n'
+            result += f'Flow Temp: {self._flow_temp}\n'
+            result += f'WC Offset: {self._wc_offset}\n'
+            result += f'Delta T Target: {self.get_last_frame()["Target Delta T"]:.1f}\n'
+
+        if friendly_operation_mode in ['CH', 'DHW']:
+            result += f'Delta T: {str(self._delta_t)}\n'
+
+        if friendly_operation_mode == 'DHW':
+            result += f'Start Temp: {self.get_first_frame()["DHW Temp"]:.1f}, '
+            result += f'End Temp: {self.get_last_frame()["DHW Temp"]:.1f}\n'
+
         if friendly_operation_mode in ['CH', 'DHW']:
             result += str(self._cycles) 
 
@@ -47,20 +60,6 @@ class SessionDuration(Duration):
             
         if friendly_operation_mode == 'CH':
             result += f"CH COP: {self._cop_average:.2f}\n"
-            result += f'Start Temp: {self.get_first_frame()["Indoor Temp"]:.1f}, '
-            result += f'End Temp: {self.get_last_frame()["Indoor Temp"]:.1f}\n'
-            result += f'Delta T Target: {self.get_last_frame()["Target Delta T"]:.1f}\n'
-
-        if friendly_operation_mode == 'DHW':
-            result += f'Start Temp: {self.get_first_frame()["DHW Temp"]:.1f}, '
-            result += f'End Temp: {self.get_last_frame()["DHW Temp"]:.1f}\n'
-
-        if friendly_operation_mode in ['CH', 'DHW']:
-            result += f'Delta T: {str(self._delta_t)}\n'
-
-        if friendly_operation_mode == 'CH':
-            result += f'Flow Setpoint: {self._flow_setpoint}\n'
-            result += f'WC Offset: {self._wc_offset}\n'
 
         return result
     

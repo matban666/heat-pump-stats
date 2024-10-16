@@ -7,7 +7,7 @@ class CycleDuration(Duration, ABC):
         super().__init__(duration_type, data_frame)
 
     def __str__(self):
-        result = f' {self.state}: duration: {self.get_duration()}, COP: {self._cop_average if self.get_duration() > timedelta(0) else 0.0:.1f}'
+        result = f' {self.state}: duration: {self.get_duration()}, Flow Overshoot: {self._flow_temp.last - self._flow_setpoint.last:.1f}, Room Overshoot: {self._inside_temp.last - self._room_setpoint.last:.1f}, COP: {self._cop_average if self.get_duration() > timedelta(0) else 0.0:.1f}'
         result += self._on_to_str()
         return result
     
