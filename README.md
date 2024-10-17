@@ -26,7 +26,7 @@ Ooptional method
 
 ## Environment
 The environment needs:
-```
+```bash
 INFLUXDB_TOKEN=<YOUR_TOKEN>
 INFLUXDB_ORG=<YOUR_ORG>
 INFLUXDM_URI=<YOUR_INFLUX_URI>
