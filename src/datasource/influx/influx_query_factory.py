@@ -1,7 +1,7 @@
 from datasource.influx.influx_queries import StringQuery, ValueQuery
 from datasource.data_types import DataTypeFloat, DataTypeString
 
-class QueryInflux:
+class InfluxQueryFactory:
     def __init__(self):
         """
         Don't instantiate this class is a static class

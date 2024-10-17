@@ -1,7 +1,7 @@
 import pickle
 from os import environ
 from collections import OrderedDict
-from datasource.influx.query_influx import QueryInflux
+from datasource.influx.influx_query_factory import InfluxQueryFactory
 from tzlocal import get_localzone
 from datasource.data_ingestor import DataByTime
 
@@ -42,7 +42,7 @@ class DataLoader:
 
             data_ingestor = DataByTime(self.local_timezone)
 
-            QueryInflux.query_influx(data_types, the_first_date, the_last_date, data_ingestor)
+            InfluxQueryFactory.query_influx(data_types, the_first_date, the_last_date, data_ingestor)
 
             self._data = data_ingestor.get_data()
 
@@ -94,7 +94,7 @@ class DataLoader:
         # Each incomimg data frame will have one or more keys depending on the 
         # data available for the timestamp. Therefore, we keep track of all 
         # values in current_data and update the values as they come in.  This
-        # way we always have a full set of values to send to the period manager
+        # way we always have a full set of values for each frame to send to the period manager
         current_data = {data_type.get_name(): data_type.get_default_value() for data_type in self.data_types.get_data_types()}
 
         for time, data in self.get_sorted_data().items():

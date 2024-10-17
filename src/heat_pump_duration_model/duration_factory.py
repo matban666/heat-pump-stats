@@ -19,7 +19,8 @@ class DurationFactory():
 
     I wonder if the logic in the factory methods should be in the durations themselves, this would make the durations
     the single source of understanding of how to create themselves.  Or, the logic in the factory methods could be moved
-    to a HeatPumpModel class so that all heat pump state transition logic was in one place and the durations were just durations
+    to a HeatPumpModel class so that all heat pump state transition logic was in one place and the durations were just 
+    data containers that do not know their peoples creator.
     """
     def __init__(self, duration_type: DurationTypes):
         self._duration_type = duration_type
