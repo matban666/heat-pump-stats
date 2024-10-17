@@ -52,11 +52,11 @@ Tested with influx local instance v2.6.0 and cloud version 3
 
 ## ToDo
 
-- Move datasource into its own project as it is re-usable - all it time-series-datasource (it's tied to influx but could be agnostic)
+- Move datasource into its own project as it is re-usable - all it time-series-datasource (it's tied to influx but could be agnostic).
 - Possible Bug: energy for defrosts in CH where DHW is used are counted against DHW, is that correct?
 - CH session sometimes split into two by defrost that uses DHW.  If a defrost in CH requires DHW, the DHW state can start before the defrost state is entered resulting in the CH sesssion being split into two sessions - see comments in integration tests (1 minute on 2024-10-14 at 07:42). I wonder if we could quaranteen new sessions for a frame or three - If we get a succession of CH, DHW defrost single frame, CH then we append the data from the last two quaranteened sessions to the prior session, make that the current session and then dump the quaranteened sessions.  Rule for exiting quaranteen normally could be that the session has more than one frame or it is more than 2 or 3 frames old.  This puts a delay on the stream of 1 to 1.5 mins (at 30 second granularity).  We also need a mechanism to flush the quaranteen queue when we have finished reading - nice if it was implicit rather than needing to call a 'flush' or 'close' from the outside.  Sessions and perhaps Cycles would need this but not Calendar durations so could manage as an extension for duration(s) rather than a modification. 
-- If datatype objects were used to store the values and moved through the pipeline then they could be used for unit display and sanity checking
-- HeatPumpState class to take complxity out of Duration
-- HeatPumpLogic class to collect the state change logic from the DurationFactory
-- Influx queries can probably be done as two queries, one for string and one for value instead of a seperate query for every metric
-- Adapt for continual streaming from influx and streaming out to somewhere else so that a web app can consume the stats
+- If datatype objects were used to store the values and moved through the pipeline then they could be used for unit display and sanity checking.
+- HeatPumpState class to take complexity out of Duration.
+- HeatPumpLogic class to collect the state change logic from the DurationFactory.
+- Influx queries can probably be done as two queries, one for string and one for value instead of a seperate query for every metric.
+- Adapt for continual streaming from influx and streaming out to somewhere else so that a web app can consume the stats.
