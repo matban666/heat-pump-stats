@@ -2,14 +2,13 @@
 Utilities to load ESPAltherma heat pump metrics from Home Assistant Influx and summarise.  The initial intention was to just display the data in different groupings to get an understanding of the heat pump behaviour in how it transitions between states and get statistics for sessions and durations. 
 
 ## Nomenclature
-- duration - A calendar/sesssion/cycle, see below.
-- calendar duration - A period of time to gather stats for: year/month/week/day
-- session duration - A period of time when the heat pump is in a single mode: Standby/CH/DHW. Calendar durtions know about sessions that start within them.
-- cycle duration - A period of time during a DHW or CH session where the compressor is on or off. Cycles belong to sessions.
+- duration - A calendar/session/cycle, see below.
+- calendar duration - A period of time to gather stats for: year/month/week/day.
+- session duration - A period of time when the heat pump is in a single mode: Standby/CH/DHW.  Session durations make themselves known to calendar durations.
+- cycle duration - A period of time during a DHW or CH session where the compressor is on or off.  Cycles belong to sessions.
 
 ## Architecture
- It currently does a single read from the datasource (live influx or pickle file), passes the complete data set to the durations manager to identify the durations, then the durations manager is asked for text or json output.  Although it is not streaming, the duration transitions are based on differences between the current and previous data frame.  Therefore, it could be adapted to stream from the input data source and stream to an output data store.  One challenge for streaming is how to handle false state changes that are correctable with data a fram or two on (see: CH session sometimes split into two by defrost that uses DHW).
-
+ It currently does a single read from the datasource (live influx or pickle file), passes the complete data set to the durations manager to identify the durations, then the durations manager is asked for text or json output.  Although it is not streaming, the duration transitions are based on differences between the current and previous data frame.  Therefore, it could be adapted to stream from the input data source and stream to an output data store.  One challenge for streaming (not yet solved for current operation) is how to handle false state changes that are correctable with data from a frame or two on (see TODO: CH session sometimes split into two by defrost that uses DHW).
 
 # Pre Requisites
 - ESP Altherma https://raomin.github.io/ESPAltherma/
