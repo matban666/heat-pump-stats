@@ -47,7 +47,7 @@ You may also have to edit the flux queries in src/datasource/influx/influx_queri
 
 ## Tests
 (venv) $ pytest
-Very Sparce
+Very Sparse
 Tested with influx local instance v2.6.0 and cloud version 3
 
 ## ToDo
