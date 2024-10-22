@@ -15,7 +15,7 @@ class InfluxClient:
         """
         self.token = environ.get("INFLUXDB_TOKEN")
         self.org = environ.get("INFLUXDB_ORG")
-        self.url = environ.get("INFLUXDM_URI")
+        self.url = environ.get("INFLUXDB_URI")
 
     def get_client(self):
         """
